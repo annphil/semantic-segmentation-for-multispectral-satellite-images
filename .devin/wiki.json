@@ -1,3 +1,17 @@
 {
-  "repo_notes": "Semantic segmentation for multispectral satellite images. Folders with ATP- are older models(references) wheras everything outside it is relevant to my project."
+  "repo_notes": "Semantic segmentation for multispectral satellite images. Folders with ATP- are older models(references) wheras everything outside it is relevant to my project.",
+    "pages": [
+    {
+      "title": "Project Training",
+      "path": "train.py"
+    },
+    {
+      "title": "Model Architecture",
+      "path": "unet.py" 
+    },
+    {
+      "title": "Project Prediction",
+      "path": "predict.py" 
+    }
+  ]
 }
