@@ -1,0 +1,307 @@
+2025-11-10 13:31:59.294017: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2025-11-10 13:31:59.351813: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX512F AVX512_VNNI AVX512_BF16 AVX512_FP16 AVX_VNNI AMX_TILE AMX_INT8 AMX_BF16 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2025-11-10 13:32:00.558456: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1762781550.817886   20642 gpu_device.cc:2020] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 46669 MB memory:  -> device: 0, name: NVIDIA RTX 6000 Ada Generation, pci bus id: 0000:17:00.0, compute capability: 8.9
+I0000 00:00:1762781550.818657   20642 gpu_device.cc:2020] Created device /job:localhost/replica:0/task:0/device:GPU:1 with 46672 MB memory:  -> device: 1, name: NVIDIA RTX 6000 Ada Generation, pci bus id: 0000:63:00.0, compute capability: 8.9
+I0000 00:00:1762781550.819584   20642 gpu_device.cc:2020] Created device /job:localhost/replica:0/task:0/device:GPU:2 with 46672 MB memory:  -> device: 2, name: NVIDIA RTX 6000 Ada Generation, pci bus id: 0000:e1:00.0, compute capability: 8.9
+Num GPUs Available: 3
+TensorFlow version: 2.20.0
+Built with CUDA: True
+Reading images
+Loaded X_train shape: (1713, 16, 256, 256)
+Loaded Y_train shape: (1713, 256, 256)
+Loaded 1284 training images
+Loaded 429 validation images
+Done reading images
+Training images: 1284
+Validation images: 429
+Sample image shape: (256, 256, 16)
+Sample mask shape: (256, 256, 1)
+Started training
+Training data shape: (1284, 256, 256, 16), (1284, 256, 256, 1)
+Validation data shape: (429, 256, 256, 16), (429, 256, 256, 1)
+Model: "functional"
+┏━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━┓
+┃ Layer (type)        ┃ Output Shape      ┃    Param # ┃ Connected to      ┃
+┡━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━┩
+│ input_layer         │ (None, 256, 256,  │          0 │ -                 │
+│ (InputLayer)        │ 16)               │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ conv2d (Conv2D)     │ (None, 256, 256,  │      4,640 │ input_layer[0][0] │
+│                     │ 32)               │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ conv2d_1 (Conv2D)   │ (None, 256, 256,  │      9,248 │ conv2d[0][0]      │
+│                     │ 32)               │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ max_pooling2d       │ (None, 128, 128,  │          0 │ conv2d_1[0][0]    │
+│ (MaxPooling2D)      │ 32)               │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ batch_normalization │ (None, 128, 128,  │        128 │ max_pooling2d[0]… │
+│ (BatchNormalizatio… │ 32)               │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ conv2d_2 (Conv2D)   │ (None, 128, 128,  │     18,496 │ batch_normalizat… │
+│                     │ 64)               │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ conv2d_3 (Conv2D)   │ (None, 128, 128,  │     36,928 │ conv2d_2[0][0]    │
+│                     │ 64)               │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ max_pooling2d_1     │ (None, 64, 64,    │          0 │ conv2d_3[0][0]    │
+│ (MaxPooling2D)      │ 64)               │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ dropout (Dropout)   │ (None, 64, 64,    │          0 │ max_pooling2d_1[… │
+│                     │ 64)               │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ batch_normalizatio… │ (None, 64, 64,    │        256 │ dropout[0][0]     │
+│ (BatchNormalizatio… │ 64)               │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ conv2d_4 (Conv2D)   │ (None, 64, 64,    │     73,856 │ batch_normalizat… │
+│                     │ 128)              │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ conv2d_5 (Conv2D)   │ (None, 64, 64,    │    147,584 │ conv2d_4[0][0]    │
+│                     │ 128)              │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ max_pooling2d_2     │ (None, 32, 32,    │          0 │ conv2d_5[0][0]    │
+│ (MaxPooling2D)      │ 128)              │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ dropout_1 (Dropout) │ (None, 32, 32,    │          0 │ max_pooling2d_2[… │
+│                     │ 128)              │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ batch_normalizatio… │ (None, 32, 32,    │        512 │ dropout_1[0][0]   │
+│ (BatchNormalizatio… │ 128)              │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ conv2d_6 (Conv2D)   │ (None, 32, 32,    │    295,168 │ batch_normalizat… │
+│                     │ 256)              │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ conv2d_7 (Conv2D)   │ (None, 32, 32,    │    590,080 │ conv2d_6[0][0]    │
+│                     │ 256)              │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ max_pooling2d_3     │ (None, 16, 16,    │          0 │ conv2d_7[0][0]    │
+│ (MaxPooling2D)      │ 256)              │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ dropout_2 (Dropout) │ (None, 16, 16,    │          0 │ max_pooling2d_3[… │
+│                     │ 256)              │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ batch_normalizatio… │ (None, 16, 16,    │      1,024 │ dropout_2[0][0]   │
+│ (BatchNormalizatio… │ 256)              │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ conv2d_8 (Conv2D)   │ (None, 16, 16,    │  1,180,160 │ batch_normalizat… │
+│                     │ 512)              │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ conv2d_9 (Conv2D)   │ (None, 16, 16,    │  2,359,808 │ conv2d_8[0][0]    │
+│                     │ 512)              │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ max_pooling2d_4     │ (None, 8, 8, 512) │          0 │ conv2d_9[0][0]    │
+│ (MaxPooling2D)      │                   │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ dropout_3 (Dropout) │ (None, 8, 8, 512) │          0 │ max_pooling2d_4[… │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ conv2d_10 (Conv2D)  │ (None, 8, 8,      │  4,719,616 │ dropout_3[0][0]   │
+│                     │ 1024)             │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ conv2d_11 (Conv2D)  │ (None, 8, 8,      │  9,438,208 │ conv2d_10[0][0]   │
+│                     │ 1024)             │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ conv2d_transpose    │ (None, 16, 16,    │  2,097,664 │ conv2d_11[0][0]   │
+│ (Conv2DTranspose)   │ 512)              │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ concatenate         │ (None, 16, 16,    │          0 │ conv2d_transpose… │
+│ (Concatenate)       │ 1024)             │            │ conv2d_9[0][0]    │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ batch_normalizatio… │ (None, 16, 16,    │      4,096 │ concatenate[0][0] │
+│ (BatchNormalizatio… │ 1024)             │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ conv2d_12 (Conv2D)  │ (None, 16, 16,    │  4,719,104 │ batch_normalizat… │
+│                     │ 512)              │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ conv2d_13 (Conv2D)  │ (None, 16, 16,    │  2,359,808 │ conv2d_12[0][0]   │
+│                     │ 512)              │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ dropout_4 (Dropout) │ (None, 16, 16,    │          0 │ conv2d_13[0][0]   │
+│                     │ 512)              │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ conv2d_transpose_1  │ (None, 32, 32,    │    524,544 │ dropout_4[0][0]   │
+│ (Conv2DTranspose)   │ 256)              │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ concatenate_1       │ (None, 32, 32,    │          0 │ conv2d_transpose… │
+│ (Concatenate)       │ 512)              │            │ conv2d_7[0][0]    │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ batch_normalizatio… │ (None, 32, 32,    │      2,048 │ concatenate_1[0]… │
+│ (BatchNormalizatio… │ 512)              │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ conv2d_14 (Conv2D)  │ (None, 32, 32,    │  1,179,904 │ batch_normalizat… │
+│                     │ 256)              │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ conv2d_15 (Conv2D)  │ (None, 32, 32,    │    590,080 │ conv2d_14[0][0]   │
+│                     │ 256)              │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ dropout_5 (Dropout) │ (None, 32, 32,    │          0 │ conv2d_15[0][0]   │
+│                     │ 256)              │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ conv2d_transpose_2  │ (None, 64, 64,    │    131,200 │ dropout_5[0][0]   │
+│ (Conv2DTranspose)   │ 128)              │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ concatenate_2       │ (None, 64, 64,    │          0 │ conv2d_transpose… │
+│ (Concatenate)       │ 256)              │            │ conv2d_5[0][0]    │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ batch_normalizatio… │ (None, 64, 64,    │      1,024 │ concatenate_2[0]… │
+│ (BatchNormalizatio… │ 256)              │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ conv2d_16 (Conv2D)  │ (None, 64, 64,    │    295,040 │ batch_normalizat… │
+│                     │ 128)              │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ conv2d_17 (Conv2D)  │ (None, 64, 64,    │    147,584 │ conv2d_16[0][0]   │
+│                     │ 128)              │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ dropout_6 (Dropout) │ (None, 64, 64,    │          0 │ conv2d_17[0][0]   │
+│                     │ 128)              │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ conv2d_transpose_3  │ (None, 128, 128,  │     32,832 │ dropout_6[0][0]   │
+│ (Conv2DTranspose)   │ 64)               │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ concatenate_3       │ (None, 128, 128,  │          0 │ conv2d_transpose… │
+│ (Concatenate)       │ 128)              │            │ conv2d_3[0][0]    │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ batch_normalizatio… │ (None, 128, 128,  │        512 │ concatenate_3[0]… │
+│ (BatchNormalizatio… │ 128)              │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ conv2d_18 (Conv2D)  │ (None, 128, 128,  │     73,792 │ batch_normalizat… │
+│                     │ 64)               │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ conv2d_19 (Conv2D)  │ (None, 128, 128,  │     36,928 │ conv2d_18[0][0]   │
+│                     │ 64)               │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ dropout_7 (Dropout) │ (None, 128, 128,  │          0 │ conv2d_19[0][0]   │
+│                     │ 64)               │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ conv2d_transpose_4  │ (None, 256, 256,  │      8,224 │ dropout_7[0][0]   │
+│ (Conv2DTranspose)   │ 32)               │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ concatenate_4       │ (None, 256, 256,  │          0 │ conv2d_transpose… │
+│ (Concatenate)       │ 64)               │            │ conv2d_1[0][0]    │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ conv2d_20 (Conv2D)  │ (None, 256, 256,  │     18,464 │ concatenate_4[0]… │
+│                     │ 32)               │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ conv2d_21 (Conv2D)  │ (None, 256, 256,  │      9,248 │ conv2d_20[0][0]   │
+│                     │ 32)               │            │                   │
+├─────────────────────┼───────────────────┼────────────┼───────────────────┤
+│ conv2d_22 (Conv2D)  │ (None, 256, 256,  │         33 │ conv2d_21[0][0]   │
+│                     │ 1)                │            │                   │
+└─────────────────────┴───────────────────┴────────────┴───────────────────┘
+ Total params: 31,107,841 (118.67 MB)
+ Trainable params: 31,103,041 (118.65 MB)
+ Non-trainable params: 4,800 (18.75 KB)
+None
+Epoch 1/50
+2025-11-10 13:34:07.067514: I external/local_xla/xla/service/service.cc:163] XLA service 0x712e04002290 initialized for platform CUDA (this does not guarantee that XLA will be used). Devices:
+2025-11-10 13:34:07.067544: I external/local_xla/xla/service/service.cc:171]   StreamExecutor device (0): NVIDIA RTX 6000 Ada Generation, Compute Capability 8.9
+2025-11-10 13:34:07.067547: I external/local_xla/xla/service/service.cc:171]   StreamExecutor device (1): NVIDIA RTX 6000 Ada Generation, Compute Capability 8.9
+2025-11-10 13:34:07.067551: I external/local_xla/xla/service/service.cc:171]   StreamExecutor device (2): NVIDIA RTX 6000 Ada Generation, Compute Capability 8.9
+2025-11-10 13:34:07.252329: I tensorflow/compiler/mlir/tensorflow/utils/dump_mlir_util.cc:269] disabling MLIR crash reproducer, set env var `MLIR_CRASH_REPRODUCER_DIRECTORY` to enable.
+2025-11-10 13:34:08.462447: I external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:473] Loaded cuDNN version 91500
+I0000 00:00:1762781679.286198   21031 device_compiler.h:196] Compiled cluster using XLA!  This line is logged at most once for the lifetime of the process.
+2025-11-10 13:34:58.322689: I external/local_xla/xla/stream_executor/cuda/subprocess_compilation.cc:346] ptxas warning : Registers are spilled to local memory in function 'input_reduce_fusion_13', 8 bytes spill stores, 8 bytes spill loads
+ptxas warning : Registers are spilled to local memory in function 'input_reduce_fusion_14', 16 bytes spill stores, 16 bytes spill loads
+ptxas warning : Registers are spilled to local memory in function 'input_reduce_fusion_15', 12 bytes spill stores, 12 bytes spill loads
+
+21/21 - 78s - 4s/step - dice_coefficient: 0.3872 - loss: 0.6150 - val_dice_coefficient: 0.4248 - val_loss: 0.5758
+Epoch 2/50
+21/21 - 6s - 285ms/step - dice_coefficient: 0.4698 - loss: 0.5462 - val_dice_coefficient: 0.4234 - val_loss: 0.5767
+Epoch 3/50
+21/21 - 6s - 279ms/step - dice_coefficient: 0.4495 - loss: 0.5485 - val_dice_coefficient: 0.4182 - val_loss: 0.5819
+Epoch 4/50
+21/21 - 8s - 359ms/step - dice_coefficient: 0.4630 - loss: 0.5370 - val_dice_coefficient: 0.4382 - val_loss: 0.5619
+Epoch 5/50
+21/21 - 6s - 274ms/step - dice_coefficient: 0.4708 - loss: 0.5305 - val_dice_coefficient: 0.4211 - val_loss: 0.5810
+Epoch 6/50
+21/21 - 6s - 282ms/step - dice_coefficient: 0.4539 - loss: 0.5361 - val_dice_coefficient: 0.0355 - val_loss: 0.9644
+Epoch 7/50
+21/21 - 6s - 272ms/step - dice_coefficient: 0.4854 - loss: 0.5192 - val_dice_coefficient: 0.3489 - val_loss: 0.6494
+Epoch 8/50
+21/21 - 8s - 369ms/step - dice_coefficient: 0.4806 - loss: 0.5185 - val_dice_coefficient: 0.4723 - val_loss: 0.5284
+Epoch 9/50
+21/21 - 8s - 382ms/step - dice_coefficient: 0.4838 - loss: 0.5119 - val_dice_coefficient: 0.4779 - val_loss: 0.5227
+Epoch 10/50
+21/21 - 6s - 293ms/step - dice_coefficient: 0.4951 - loss: 0.5137 - val_dice_coefficient: 0.4776 - val_loss: 0.5234
+Epoch 11/50
+21/21 - 8s - 390ms/step - dice_coefficient: 0.5024 - loss: 0.5042 - val_dice_coefficient: 0.4901 - val_loss: 0.5108
+Epoch 12/50
+21/21 - 6s - 292ms/step - dice_coefficient: 0.4844 - loss: 0.5068 - val_dice_coefficient: 0.4611 - val_loss: 0.5403
+Epoch 13/50
+21/21 - 6s - 273ms/step - dice_coefficient: 0.4886 - loss: 0.5115 - val_dice_coefficient: 0.4665 - val_loss: 0.5339
+Epoch 14/50
+21/21 - 6s - 292ms/step - dice_coefficient: 0.4991 - loss: 0.5039 - val_dice_coefficient: 0.4870 - val_loss: 0.5135
+Epoch 15/50
+21/21 - 6s - 271ms/step - dice_coefficient: 0.4941 - loss: 0.4986 - val_dice_coefficient: 0.4859 - val_loss: 0.5153
+Epoch 16/50
+21/21 - 6s - 289ms/step - dice_coefficient: 0.4897 - loss: 0.5049 - val_dice_coefficient: 0.4886 - val_loss: 0.5123
+Epoch 17/50
+21/21 - 8s - 395ms/step - dice_coefficient: 0.4832 - loss: 0.5034 - val_dice_coefficient: 0.4983 - val_loss: 0.5023
+Epoch 18/50
+21/21 - 6s - 294ms/step - dice_coefficient: 0.4962 - loss: 0.4999 - val_dice_coefficient: 0.4927 - val_loss: 0.5094
+Epoch 19/50
+21/21 - 6s - 292ms/step - dice_coefficient: 0.4769 - loss: 0.5029 - val_dice_coefficient: 0.4796 - val_loss: 0.5214
+Epoch 20/50
+21/21 - 6s - 298ms/step - dice_coefficient: 0.4954 - loss: 0.5039 - val_dice_coefficient: 0.4840 - val_loss: 0.5162
+Epoch 21/50
+21/21 - 8s - 374ms/step - dice_coefficient: 0.4886 - loss: 0.4930 - val_dice_coefficient: 0.5084 - val_loss: 0.4934
+Epoch 22/50
+21/21 - 6s - 290ms/step - dice_coefficient: 0.4950 - loss: 0.5009 - val_dice_coefficient: 0.4925 - val_loss: 0.5085
+Epoch 23/50
+21/21 - 6s - 282ms/step - dice_coefficient: 0.5146 - loss: 0.4950 - val_dice_coefficient: 0.4925 - val_loss: 0.5087
+Epoch 24/50
+21/21 - 6s - 294ms/step - dice_coefficient: 0.4951 - loss: 0.4903 - val_dice_coefficient: 0.4743 - val_loss: 0.5245
+Epoch 25/50
+21/21 - 6s - 295ms/step - dice_coefficient: 0.5136 - loss: 0.4948 - val_dice_coefficient: 0.5004 - val_loss: 0.5011
+Epoch 26/50
+21/21 - 6s - 291ms/step - dice_coefficient: 0.4995 - loss: 0.4916 - val_dice_coefficient: 0.4955 - val_loss: 0.5053
+Epoch 27/50
+21/21 - 6s - 294ms/step - dice_coefficient: 0.4949 - loss: 0.4926 - val_dice_coefficient: 0.4688 - val_loss: 0.5311
+Epoch 28/50
+21/21 - 6s - 293ms/step - dice_coefficient: 0.5127 - loss: 0.4929 - val_dice_coefficient: 0.4808 - val_loss: 0.5198
+Epoch 29/50
+21/21 - 6s - 292ms/step - dice_coefficient: 0.5131 - loss: 0.4880 - val_dice_coefficient: 0.4918 - val_loss: 0.5089
+Epoch 30/50
+21/21 - 6s - 295ms/step - dice_coefficient: 0.4928 - loss: 0.4965 - val_dice_coefficient: 0.5027 - val_loss: 0.4989
+Epoch 31/50
+21/21 - 6s - 291ms/step - dice_coefficient: 0.5256 - loss: 0.4874 - val_dice_coefficient: 0.4922 - val_loss: 0.5086
+Epoch 32/50
+21/21 - 6s - 295ms/step - dice_coefficient: 0.5128 - loss: 0.4911 - val_dice_coefficient: 0.4788 - val_loss: 0.5222
+Epoch 33/50
+21/21 - 6s - 296ms/step - dice_coefficient: 0.4992 - loss: 0.4887 - val_dice_coefficient: 0.4623 - val_loss: 0.5380
+Epoch 34/50
+21/21 - 6s - 295ms/step - dice_coefficient: 0.5048 - loss: 0.4827 - val_dice_coefficient: 0.4797 - val_loss: 0.5204
+Epoch 35/50
+21/21 - 6s - 293ms/step - dice_coefficient: 0.5063 - loss: 0.4890 - val_dice_coefficient: 0.4846 - val_loss: 0.5163
+Epoch 36/50
+21/21 - 8s - 386ms/step - dice_coefficient: 0.5249 - loss: 0.4866 - val_dice_coefficient: 0.5102 - val_loss: 0.4909
+Epoch 37/50
+21/21 - 6s - 289ms/step - dice_coefficient: 0.4962 - loss: 0.4869 - val_dice_coefficient: 0.5105 - val_loss: 0.4911
+Epoch 38/50
+21/21 - 6s - 277ms/step - dice_coefficient: 0.5177 - loss: 0.4853 - val_dice_coefficient: 0.4955 - val_loss: 0.5074
+Epoch 39/50
+21/21 - 6s - 290ms/step - dice_coefficient: 0.4995 - loss: 0.4969 - val_dice_coefficient: 0.4957 - val_loss: 0.5047
+Epoch 40/50
+21/21 - 6s - 290ms/step - dice_coefficient: 0.5097 - loss: 0.4819 - val_dice_coefficient: 0.4776 - val_loss: 0.5212
+Epoch 41/50
+21/21 - 6s - 288ms/step - dice_coefficient: 0.5315 - loss: 0.4782 - val_dice_coefficient: 0.5097 - val_loss: 0.4917
+Epoch 42/50
+21/21 - 6s - 289ms/step - dice_coefficient: 0.5181 - loss: 0.4774 - val_dice_coefficient: 0.5038 - val_loss: 0.4970
+Epoch 43/50
+21/21 - 6s - 288ms/step - dice_coefficient: 0.5108 - loss: 0.4757 - val_dice_coefficient: 0.5010 - val_loss: 0.4998
+Epoch 44/50
+21/21 - 6s - 287ms/step - dice_coefficient: 0.5174 - loss: 0.4795 - val_dice_coefficient: 0.4911 - val_loss: 0.5093
+Epoch 45/50
+21/21 - 6s - 286ms/step - dice_coefficient: 0.5251 - loss: 0.4856 - val_dice_coefficient: 0.5084 - val_loss: 0.4932
+Epoch 46/50
+21/21 - 8s - 390ms/step - dice_coefficient: 0.5239 - loss: 0.4771 - val_dice_coefficient: 0.5165 - val_loss: 0.4857
+Epoch 47/50
+21/21 - 8s - 361ms/step - dice_coefficient: 0.5245 - loss: 0.4779 - val_dice_coefficient: 0.5195 - val_loss: 0.4827
+Epoch 48/50
+21/21 - 6s - 287ms/step - dice_coefficient: 0.5109 - loss: 0.4764 - val_dice_coefficient: 0.5041 - val_loss: 0.4964
+Epoch 49/50
+21/21 - 6s - 291ms/step - dice_coefficient: 0.5192 - loss: 0.4852 - val_dice_coefficient: 0.4750 - val_loss: 0.5254
+Epoch 50/50
+21/21 - 6s - 288ms/step - dice_coefficient: 0.5193 - loss: 0.4836 - val_dice_coefficient: 0.4783 - val_loss: 0.5222
